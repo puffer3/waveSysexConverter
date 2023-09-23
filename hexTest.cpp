@@ -30,6 +30,8 @@ float midiToBipolar(int midiValue) {
     // Ensure the MIDI value is within the valid range (0 to 127)
     if (midiValue < 0) {
         midiValue = 0;
+        return midiValue;
+
     } else if (midiValue > 127) {
         midiValue = 127;
     }
@@ -126,7 +128,7 @@ outputFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 
 //Name Patch
 
-outputFile << "  <WWCFileSave version=\"1\" author=" << name << ">" << std::endl;
+outputFile << "  <WWCFileSave version=\"1\" author=\"" << name << "\">" << std::endl;
 outputFile << "  <WWCTags Bright=\"0\" Dark=\"0\" Warm=\"0\" Cold=\"0\" Heavy=\"0\" Light=\"0\" Punchy=\"0\"\n"
               "           Mellow=\"0\" Rich=\"0\" Sparse=\"0\" Lush=\"0\" Layered=\"0\" Metallic=\"0\"\n"
               "           Wooden=\"0\" Gritty=\"0\" Smooth=\"0\" Detuned=\"0\" Plucky=\"0\" Short Decay=\"0\"\n"
@@ -247,8 +249,8 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 58: paramName = "wave1_startmod_amt"; intValue = midiToBipolar(intValue); break;
                         case 60: paramName = "wave1_env_amt"; intValue = midiToBipolar(intValue);  break;
                         case 62: paramName = "wave1_env_velamt";  intValue = midiToBipolar(intValue); break;
-                        case 64: paramName = "wave1_kbcenter"; break;
-                        case 66: paramName = "wave1_kbtrack";  intValue = midiToBipolar(intValue); break;
+                        case 64: paramName = "wave1_kbtrack"; break;   //WRONG
+                        case 66: paramName = "wave1_kbcenter";  intValue = midiToBipolar(intValue); break;
                         case 68: paramName = "wave1_mod1_source"; break;
                         case 70: paramName = "wave1_mod1_ctrl"; break;
                         case 72: paramName = "wave1_mod1_amt"; intValue = midiToBipolar(intValue);  break;
@@ -257,8 +259,8 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 78: paramName = "wave1_mod2_quantize"; break;
                         case 80: paramName = "wave1_steppedsmooth"; break;
                         case 82: paramName = "unused"; break;
-                        case 84: paramName = "wave2_startwave"; break;
-                        case 86: paramName = "wave2_wavephase"; break;
+                        case 84: paramName = "wave2_wavepos"; break;   // BOTH WAVES USE THE SAME WAVETABLE !
+                        case 86: paramName = "wave2_phase"; break;
                         case 88: paramName = "wave2_startmod_source"; break;
                         case 90: paramName = "wave2_startmod_amt"; intValue = midiToBipolar(intValue);  break;
                         case 92: paramName = "wave2_env_amt";  intValue = midiToBipolar(intValue); break;
@@ -298,15 +300,15 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 160: paramName = "filter_resonance"; break;
                         case 162: paramName = "filter_env_amt"; intValue = midiToBipolar(intValue);  break;
                         case 164: paramName = "filter_vel_amt";  intValue = midiToBipolar(intValue); break;
-                        case 166: paramName = "filter_kbtrack"; intValue = midiToBipolar(intValue);  break;
-                        case 168: paramName = "filter_kbcenter"; break;
+                        case 166: paramName = "filter_keytrack"; intValue = midiToBipolar(intValue);  break;
+                        case 168: paramName = "filter_keycenter"; break;
                         case 170: paramName = "filter_mod1_source"; break;
-                        case 172: paramName = "filter_mod1_ctrl"; break;
+                        case 172: paramName = "filter_mod1_control"; break;
                         case 174: paramName = "filter_mod1_amt";  intValue = midiToBipolar(intValue); break;
                         case 176: paramName = "filter_mod2_source"; break;
                         case 178: paramName = "filter_mod2_amt";  intValue = midiToBipolar(intValue); break;
                         case 180: paramName = "filter_resmod_source"; break;
-                        case 182: paramName = "filter_resmod_ctrl"; break;
+                        case 182: paramName = "filter_resmod_control"; break;
                         case 184: paramName = "filter_resmod_amt";  intValue = midiToBipolar(intValue); break;
                         case 186: paramName = "dualmode_hp_freq"; break;
                         case 188: paramName = "dualmode_hp_env_select"; break;
@@ -315,40 +317,40 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 194: paramName = "dualmode_hp_keytrack"; break;
                         case 196: paramName = "dualmode_hp_keycenter"; break;
                         case 198: paramName = "dualmode_hp_mod1_source"; break;
-                        case 200: paramName = "dualmode_hp_mod1_ctrl"; break;
+                        case 200: paramName = "dualmode_hp_mod1_control"; break;
                         case 202: paramName = "dualmode_hp_mod1_amt";intValue = midiToBipolar(intValue);  break;
                         case 204: paramName = "dualmode_hp_mod2_source"; break;
                         case 206: paramName = "dualmode_hp_mod2_amt"; break;
                         case 208: paramName = "bandpass_filter_bandwidth"; break;
                         case 210: paramName = "unused"; break;
-                        case 212: paramName = "amp_env__atk"; break;
+                        case 212: paramName = "amp_env_atk"; break;
                         case 214: paramName = "amp_env_decay"; break;
-                        case 216: paramName = "amp_env_sustain"; break;
-                        case 218: paramName = "amp_env_release"; break;
-                        case 220: paramName = "amp_env__atk_mod_source"; break;
-                        case 222: paramName = "amp_env__atk_mod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 224: paramName = "amp_env_decay_mod_source"; break;
-                        case 226: paramName = "amp_env_decay_mod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 228: paramName = "amp_env_sustain_mod_source"; break;
-                        case 230: paramName = "amp_env_sustain_mod_amt";  intValue = midiToBipolar(intValue); break;
-                        case 232: paramName = "amp_env_release_mod_source"; break;
-                        case 234: paramName = "amp_env_release_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 216: paramName = "amp_env_sus"; break;
+                        case 218: paramName = "amp_env_rel"; break;
+                        case 220: paramName = "amp_env_atk_mod_src"; break;
+                        case 222: paramName = "amp_env_atk_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 224: paramName = "amp_env_dec_mod_src"; break;
+                        case 226: paramName = "amp_env_dec_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 228: paramName = "amp_env_sus_mod_src"; break;
+                        case 230: paramName = "amp_env_sus_mod_amt";  intValue = midiToBipolar(intValue); break;
+                        case 232: paramName = "amp_env_rel_mod_src"; break;
+                        case 234: paramName = "amp_env_rel_mod_amt"; intValue = midiToBipolar(intValue);  break;
                         case 236: paramName = "unused"; break;
-                        case 238: paramName = "filter_env_delay"; break;
-                        case 240: paramName = "filter_env_atk"; break;
-                        case 242: paramName = "filter_env_decay"; break;
-                        case 244: paramName = "filter_env_sustain"; break;
-                        case 246: paramName = "filter_env_release"; break;
+                        case 238: paramName = "filt_env_del"; break;
+                        case 240: paramName = "filt_env_atk"; break;
+                        case 242: paramName = "filt_env_dec"; break;
+                        case 244: paramName = "filt_env_sus"; break;
+                        case 246: paramName = "filt_env_rel"; break;
                         case 248: paramName = "unused"; break;
                         case 250: paramName = "unused"; break;
-                        case 252: paramName = "filter_env_atk_mod_source"; break;
-                        case 254: paramName = "filter_env_atk_mod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 256: paramName = "filter_env_dec_mod_source"; break;
-                        case 258: paramName = "filter_env_dec_mod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 260: paramName = "filter_env_sustain_mod_source"; break;
-                        case 262: paramName = "filter_env_sustain_mod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 264: paramName = "filter_env_release_mod_source"; break;
-                        case 266: paramName = "filter_env_release_mod_amt";  intValue = midiToBipolar(intValue); break;
+                        case 252: paramName = "filt_env_atk_mod_source"; break;
+                        case 254: paramName = "filt_env_atk_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 256: paramName = "filt_env_dec_mod_source"; break;
+                        case 258: paramName = "filt_env_dec_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 260: paramName = "filt_env_sus_mod_source"; break;
+                        case 262: paramName = "filt_env_sus_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 264: paramName = "filt_env_rel_mod_source"; break;
+                        case 266: paramName = "filt_env_rel_mod_amt";  intValue = midiToBipolar(intValue); break;
                         case 268: paramName = "unused"; break;
                         case 270: paramName = "wave_env_time_1"; break;
                         case 272: paramName = "wave_env_level_1"; break;
@@ -366,10 +368,10 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 296: paramName = "wave_env_level_7"; break;
                         case 298: paramName = "wave_env_time_8"; break;
                         case 300: paramName = "wave_env_level_8"; break;
-                        case 302: paramName = "wave_env_timemod_source"; break;
-                        case 304: paramName = "wave_env_timemod_amt"; intValue = midiToBipolar(intValue);  break;
-                        case 306: paramName = "wave_env_levelmod_source"; break;
-                        case 308: paramName = "wave_env_levelmod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 302: paramName = "wave_env_time_mod_source"; break;
+                        case 304: paramName = "wave_env_time_mod_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 306: paramName = "wave_env_level_mod_source"; break;
+                        case 308: paramName = "wave_env_level_mod_amt"; intValue = midiToBipolar(intValue);  break;
                         case 310: paramName = "wave_env_key_off_point"; break;
                         case 312: paramName = "wave_env_loop_start_point"; break;
                         case 314: paramName = "wave_env_loop_onoff"; break;
@@ -391,29 +393,29 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 346: paramName = "lfo1_shape"; break;
                         case 348: paramName = "lfo1_symmetry"; break;
                         case 350: paramName = "lfo1_humanize"; break;
-                        case 352: paramName = "lfo1_rate_mod_source"; break;
-                        case 354: paramName = "lfo1_rate_mod_amt"; break;
-                        case 356: paramName = "lfo1_level_mod_source"; break;
-                        case 358: paramName = "lfo1_level_mod_ctrl"; break;
-                        case 360: paramName = "lfo1_level_mod_amt"; break;
+                        case 352: paramName = "lfo1_ratemod_source"; break;
+                        case 354: paramName = "lfo1_ratemod_amt"; break;
+                        case 356: paramName = "lfo1_levelmod_source"; break;
+                        case 358: paramName = "lfo1_levelmod_control"; break;
+                        case 360: paramName = "lfo1_levelmod_amt"; break;
                         case 362: paramName = "lfo1_sync"; break;
                         case 364: paramName = "lfo2_rate"; break;
                         case 366: paramName = "lfo2_shape"; break;
                         case 368: paramName = "lfo2_symmetry"; break;
                         case 370: paramName = "lfo2_humanize"; break;
-                        case 372: paramName = "lfo2_rate_mod"; break;
-                        case 374: paramName = "lfo2_rate_mod"; break;
+                        case 372: paramName = "lfo2_ratemod_source"; break;
+                        case 374: paramName = "lfo2_ratemod_amt"; break;
                         case 376: paramName = "lfo2_levelmod_source"; break;
                         case 378: paramName = "lfo2_levelmod_ctrl"; break;
                         case 380: paramName = "lfo2_levelmod_amt"; break;
                         case 382: paramName = "lfo2_sync"; break;
-                        case 384: paramName = "ctrl_ramp_trigger_source"; break;
-                        case 386: paramName = "ctrl_ramp_rate"; intValue = midiToBipolar(intValue);  break;
-                        case 388: paramName = "panning_source1"; break;
-                        case 390: paramName = "panning_ctrl1"; break;
-                        case 392: paramName = "panning_amt1"; intValue = midiToBipolar(intValue);  break;
-                        case 394: paramName = "panning_source2"; break;
-                        case 396: paramName = "panning_amt2"; intValue = midiToBipolar(intValue); break;
+                        case 384: paramName = "controlramp_triggersource"; break;
+                        case 386: paramName = "controlramp_rate"; intValue = midiToBipolar(intValue);  break;
+                        case 388: paramName = "panning1_source"; break;
+                        case 390: paramName = "panning1_control"; break;
+                        case 392: paramName = "panning1_amt"; intValue = midiToBipolar(intValue);  break;
+                        case 394: paramName = "panning2_source"; break;
+                        case 396: paramName = "panning2_amt"; intValue = midiToBipolar(intValue); break;
                         case 398: paramName = "controlcomp_source"; break;
                         case 400: paramName = "controlcomp_threshold"; intValue = midiToBipolar(intValue);  break;
                         case 402: paramName = "controlmix1_source"; break;
@@ -471,7 +473,6 @@ outputFile <<"<WWCAPVTS>" << std::endl;
                         case 506: paramName = "named" ; break;
                         case 508: paramName = "namee" ; break;
                         case 510: paramName = "namef" ; break;
-                        case 512: paramName = "nameg" ; break;
 
                         default: paramName = "Parameter" + std::to_string(i / 2); break;
                     }
@@ -489,22 +490,37 @@ outputFile <<"<WWCAPVTS>" << std::endl;
             }
 
             //write the unassigned parameters that the patch data does not contain
+                    outputFile <<"  <PARAM id=\"instrument\" value=\"1.0\"/>" << std::endl;
                     outputFile <<"  <PARAM id=\"bank\" value=\"1.0\"/>" << std::endl;
                     outputFile <<"  <PARAM id=\"change\" value=\"1\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"midichannel\" value=\"1.0\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"xy_x\" value=\"46.0\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"xy_y\" value=\"47.0\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"volchange\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"xy_x\" value=\"4\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"xy_y\" value=\"0\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"volchange\"value=\"0\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"xy_x_1\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"xy_x_2\" value=\"46.0\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"xy_x_2\" value=\"0.0\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"xy_x_3\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"xy_x_val\" value=\"1.0\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"xy_x_val\" value=\"0.0\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"xy_y_1\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"xy_y_2\"/>"<< std::endl;
                     outputFile <<"  <PARAM id=\"xy_y_3\"/>"<< std::endl;
-                    outputFile <<"  <PARAM id=\"xy_y_val\" value=\"1.0\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"xy_y_val\" value=\"0.0\"/>"<< std::endl;
+                    outputFile <<"  <PARAM id=\"panning\" value=\"0.0\"/>/\""<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_0\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_1\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_2\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_3\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_4\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_5\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_6\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"perf_level_7\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"stereo_width\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"system_tuning\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"system_volume\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"sound\" value=\"0.0\"/>"<<std::endl;
+                    outputFile <<"  <PARAM id=\"wave2_wavetabe\" value=\"0.0\"/>"<<std::endl;
 
-
+//WAVE2 WAVEPOS & Wavetable
 
             // Close the root element
             outputFile << "</WWCAPVTS>" << std::endl;
@@ -573,7 +589,7 @@ void BankStringToSoundProgram(const std::string& midiString)
 
 int main()
 {
-    std::string parameter = "DavidSoundBankA.syx";
+    std::string parameter = "b067_steelWaveSound.syx";
 
     // Call the function to open the SysEx file and return the MIDI string
     std::string midiString = fileToHexString(parameter);
