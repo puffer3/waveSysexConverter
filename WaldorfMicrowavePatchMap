@@ -1,0 +1,263 @@
+//
+// Created by Henry Glover on 3/20/24.
+//
+
+
+/*microwave patch files are 187 total bytes.  Header is 5 bytes long:
+    F0 - sysex
+    3E - manufacturer
+    00 - unit ID (in case of multiple devices)
+    00 - device ID
+    54 - message ID  (42 for patch dump, 54 for cartridge dump - which is a lot of the online banks)
+
+    patch information is 181 bytes
+
+    f03e 0000 54
+
+first patch from ambient cart bank :
+
+ Strip Header 5 bytes
+
+20  Octave  - no transform
+00  semitone - (0 - 120) in multiples of 8 (15 values) (7 up 7 dowm maybe?) transfomed to (16-112) in multiples of 4  (24 values)
+3e  detune - (0 - 127) for -64 to +63 transformed to (14-114) values -50 to +50
+02  bend range - (0-12 semitones) transformed to (16-112 in steps of 4 for -12 to +12)
+00  pitch mode (0 - 1 ) for normal or fixed to (0 or 5) normal or fixed
+01  osc 1 mod 1 source (23 at table to 39 on wave)
+15  osc 1 mod 1 control (23 to 39)
+48  osc 1 mod amount - no transform
+00  osc 1 mod 2 source (15 for some reason at table? to 29 on wave
+45  osc 1 mod 2 amount - no transform
+00  osc1 modifier 2 quantize - no transform
+
+
+
+30  osc 2 octave - no transform
+00  osc 2 semitone - (0- 120) in multiples of 8 (15 values) (7 up 7 dowm maybe?) transfomed to (16-112) in multiples of 4  (24 values)
+42  osc 2 detune - (0 - 127) for -64 to +63 transformed to (14-114) values -50 to +50
+02  osc 2 bend range - (0-12 semitones) transformed to (16-112 in steps of 4 for -12 to +12)
+00  osc 2 pitch mode (0 - 1 ) for normal or fixed to (0 or 5) normal or fixed
+00  osc 2 mod 1 source (23 at table to 39 on wave)
+15  osc 2 mod 1 control (23 to 39)
+3b  osc 2 mod amount - no transform
+01  osc 2 mod 2 source (15 for some reason at table? to 29 on wave
+
+
+38  osc 2 mod 2 amount - no transform
+00  osc2 modifier 2 quantize - no transform
+01  osc 2 link mode - no transform
+ --insert chopper bit for wave at 24
+32  wavetable (0 - 80 for MW) to 0 - 127 for wave
+21  wavetable  startwave -  no transform
+7f  wave 1 startsample or wave phase - no transform
+ insert empty start mod source
+ insert empty start mod amount
+40  wave1 env amount - no transform
+40  wave 1 env velocity - no transform
+40  wave 1 keytrack - no transform
+
+
+ inset 63 centered keytrack center value
+
+15  wave 1 mod 1 source (23 at table to 39 on wave)
+0c  wave 1 mod 2 control (23 to 39)
+4c  wave 1 mod amount - no transform
+00  wave 1 mod 2 source (23 for some reason at table? to 39 on wave
+40  wave 1 mod 2 amount - no transform
+00  wave mode - no transform
+1e  -- unused apparently - chopper in wave
+0e wave  2 startwave -  no transform
+01  wave 2 startsample or wave phase - no transform
+ insert empty start mod source
+ insert empty start mod amount
+40 wave2 env amount - no transform
+
+
+
+
+40 wave 2 env velocity - no transform
+40 wave 2 keytrack - no transform
+ insert 63 centered keytrack center value
+15 wave 2 mod 1 source (23 at table to 39 on wave)
+0c wave 2 mod 2 control (23 to 39)
+39 wave 2 mod amount - no transform
+ 00 wave 2 mod 2 source (23 for some reason at table? to 39 on wave
+ 40 wave 2 mod 2 amount - no transform
+ 00 wave mode - no transform
+ 01 wave 2 link mode - no transform
+ insert empty chopper byte
+ 40 wave 1 volume - no transform
+ 40 wave 2 volume - no transform
+ 00 noise volume - no transform
+
+
+
+    insert empty byte volume mod 1 source   actually all of these are tucked onto the end of the micro sysex file
+    insert empty byte volume mod 1 amount
+    insert empty byte volume mod 2 source
+    insert empty byte volume mod 2 amount
+    insert empty byte noise mod source
+    insert empty byte noise mod amount
+ 5a sound volume - NOT LOCATED HERE ON WAVE move this BYTE
+ 7f vol env amount - no transform
+ 7f vol env velocity - no transform
+ 40 vol env keytrack - no transform
+   insert 63 centered keytrack center value
+ 0c vol mod 1 source (23 at table to 39 on wave)
+ 15 vol mod 1 control (23 to 39)
+ 5b vol mod amount - no transform
+ 16 vol mod 2 source (23 for some reason at table? to 39 on wave
+40  vol mod 2 amount - no transform
+ INSERT EMPTY CHOPPER BYTE
+ INSERT LOWPASS FILTER BYTE 00
+
+
+
+ 09 cuttoff - no transform
+ 2d resonance - no transform
+ 57 filter env amount - no transform
+ 5a filter env velocity - no transform
+ 5e filter env keytrack - no transform
+  INSERT 63 centered keytrack center value
+ 00 filter mod 1 source (23 at table to 39 on wave)
+ 15 filter mod 1 control (23 to 39)
+ 49 filter mod 1 amount - no transform
+ 12 filter mod 2 source (23 for some reason at table? to 39 on wave
+ 40 filter mod 2 amount - no transform
+ 01 filter resonance mod source - 23 -39
+    INSERT empty byte for resonance CONTROL
+ 40 filter resonance mod amount - no transform
+   INSERT 13 ! empty bytes for other filter modes and one chopper byte (93-105)
+ 10 vol env attack - no transform
+ 71 vol env decay - no transform
+ 3f vol env sustain - no transform
+10 vol env release - no transform
+ 07 vol env attack mod source (23 - 39)
+
+
+
+
+
+ 22 vol env attack mod amount - no transform
+ 11 vol env decay mod source (23 - 39)
+ 40 vol env decay mod amount - no transform
+ 07 vol env sustain mod source (23 - 39)
+ 2c vol env sustain mod amount - no transform
+ 08 vol env release mod source (23 - 39)
+ 22 vol env release mod amount - no transform
+ 00 unused by microwave - chopper in Wave
+ 00 filter env delay - no transform
+ 04 filter env attack - no transform
+ 2b filter env decay - no transform
+ 24 filter env sustain - no transform
+ 3c filter env release - no transform
+ 00 filter env delay mod source - NOT USED IN WAVE - chopper bits 124
+40 filter env delay mod amount - NOT USED IN WAVE - chopper bits 125
+
+ 00 filter env attack mod source (23 - 39)
+ 40 filter env attack mod amount - no transform
+ 00 filter env decay mod source (23 - 39)
+ 40 filter env decay mod amount - no transform
+ 00 filter env sustain mod source (23 - 39)
+ 40 filter env sustain mod amount - no transform
+ 00 filter env release mod source (23 - 39)
+ 40 filter env release mod amount - no transform
+ 00 unused by microwave - chopper in Wave
+
+
+ 46 wave env time 1
+ 28 wave env level 1
+ 54 wave env time 2
+ 16 wave env level 2
+ 5c wave env time 3
+ 46 wave env level 3
+50  wave env time 4
+ 5a wave env level 4
+ 7f wave env time 5
+ 6e wave env level 5
+ 00 wave env time 6
+ 00 wave env level 6
+ 00 wave env time 7
+ 38 wave env level 7
+ 00 wave env time 8
+ 3d wave env level 8
+ 00 wave time mod source (23 - 39)
+ 40 wave time mod amount - no transform
+ 00 wave level mod source (23 - 39)
+ 36 wave level mod amount - no transform
+ 02 wave env key off point - no transform
+ 01 wave env loop start - no transform
+00  wave env loop mode - no transform
+
+ INSERT 14 empty bytes for chopper and free env
+
+ 35 lfo 1 rate
+ 01 lfo shape - requires remap (microwave 0sin 1saw 2pulse 3random
+ 40 lfo symmetry - no transform
+ 00 lfo humanize (0-4) to (0-7)
+ 0c lfo 1 rate mod source (23 - 39)
+ 58 lfo 1 rate mod amount - no transform
+ 15 lfo 1 level mod source - (23 - 39)
+  inSERT 2 EMPTY BYTES FOR CONTROL AND AMOUNT
+ 00 lfo 1 sync - no transform
+ 00lfo 1 delay
+ 25lfo 1 attack
+ 00 lfo 1 decay
+ 30 lfo 2 rate - no transform
+ 00 lfo 2 shape - requires remap (microwave 0sin 1saw 2pulse 3random
+ 40 lfo 2 symmetry - no transform
+ 07 lfo 2 humanize (0-4) to (0-7)
+ 00 LFO 2 phase shift *****MAYBE MAP TO WAVE BYTE 232
+ 00 UNUSED IN microwave
+   INSERT 4 BYTES FOR LFO 2 LEvel and source and sync not present in microwave
+   INSERT 2 EMPTY BYTES FOR control ramp not present in microwave
+ 40 pan - NOT HERE ON WAVE MUST REMAP
+ 01 pan mod source (23 - 39)
+ INSERY EMPTY BYTE FOR CONTROL
+ 40 pan mod amount - no transform
+ INSERT 2 EMPTY BYTES FOR PAN 2 SOURCE/AMT
+ INSERT 33 empty BYTES FOR CONTROL/SH unused in MICROWAVE
+ 00 glide type - no transform
+ 1b glide rate - no transform
+ 00 glide slope - no transform
+ INSERT 3 BYTES for Glide MOD and ON/OFF not present in microwave
+ 00 tuning table UNUSED IN WAVE
+ 41 Microwave Name 1
+ 74
+ 6d
+ 6f
+ 73
+ 42
+ 61
+ 73
+ 73
+ 20
+31
+ 20
+ 20
+ 53
+ 50
+ 47 -microwave name end
+ 36 MICROWAVE wave 1 level modifier source (23 - 39)   MAP ALL OF THESE TO SPECIFIC LOCATIONS
+ 00 microwave wave 1 level modifier amount - no transform
+ 11 microwave wave 2 level modifier source (23 - 39)
+ 40 microwave wave 2 level modifier amount - no transform
+ 4b noise level modifier source (23 - 39)
+ 6c noise level modifier amount - no transform
+ 00 -UNUSED IN MICROWAVE
+ 00
+ 00
+ 20
+ 7f
+ 00
+ 00
+ 4a
+ 68
+ 55   -- Valid Flag 55
+     --checksum
+     -- f7h EOX
+
+ */
+
+
+
